@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Electro.Shop.BLL/Electro.Shop.BLL.csproj" />
+  <Project Path="Electro.Shop.DAL/Electro.Shop.DAL.csproj" />
+  <Project Path="Electro.Shop.PL/Electro.Shop.PL.csproj" />
+</Solution>
