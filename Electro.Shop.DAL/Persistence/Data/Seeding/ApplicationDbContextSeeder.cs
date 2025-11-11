@@ -24,6 +24,8 @@ namespace Electro.Shop.DAL.Persistence.Data.Seeding
                     new RoleSeeder(),
                     new CategorySeeder(),
                     new SubCategorySeeder(),
+                    new CollectionSeeder(),
+                    new BrandSeeder(),
                     new ProductSeeder(),
                     new ProductImageSeeder()
                 };

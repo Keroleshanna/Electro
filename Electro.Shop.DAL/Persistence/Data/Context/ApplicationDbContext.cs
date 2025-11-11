@@ -16,6 +16,9 @@ namespace Electro.Shop.DAL.Persistence.Data.Context
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<Collection> Collections { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+
 
 
 

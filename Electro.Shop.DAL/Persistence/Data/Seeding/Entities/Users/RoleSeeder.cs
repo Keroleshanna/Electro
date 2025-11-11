@@ -1,6 +1,5 @@
 ﻿using Electro.Shop.DAL.Persistence.Data.Context;
 using Electro.Shop.DAL.Persistence.Data.Seeding.Common;
-using Microsoft.Extensions.Configuration;
 
 namespace Electro.Shop.DAL.Persistence.Data.Seeding.Entities.Users
 {

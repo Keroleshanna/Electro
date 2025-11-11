@@ -6,16 +6,18 @@
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
-        public string? Brand { get; set; }
         public string? Size { get; set; }
         
-        public int SubCategoryId { get; set; }
+        public int CollectionId { get; set; }
+        public Collection Collection { get; set; } = null!;
 
-        // 🔥 بدل ما تخزن ImageUrl واحدة
-        public ICollection<ProductImage> ProductImages { get; set; } = [];
+        public int BrandId { get; set; }          
+        public Brand Brand { get; set; } = null!;
+
 
         // Relations
-        public SubCategory SubCategory { get; set; } = null!;
+        /// 🔥 بدل ما تخزن ImageUrl واحدة
+        public ICollection<ProductImage> ProductImages { get; set; } = [];
         public ICollection<Review> Reviews { get; set; } = [];
         public ICollection<OrderItem> OrderItems { get; set; } = [];
     }

@@ -1,7 +1,5 @@
-﻿using Electro.Shop.BLL.DTOs.Products;
-using Electro.Shop.BLL.Services.Products;
+﻿using Electro.Shop.BLL.Services.Products;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Electro.Shop.PL.Areas.Customer.Controllers
 {
@@ -11,41 +9,18 @@ namespace Electro.Shop.PL.Areas.Customer.Controllers
         private readonly IProductService _productService = productService;
 
         // GET: ProductController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index(string search, string sortedBy, int pageNumber = 1, int pageSize = 9)
         {
-            var products = (await _productService.GetAllAsync()).AsQueryable()
-                .Include(p => p.ProductImages)
-                .Include(s => s.SubCategory)
-                .ThenInclude(c => c.Category).ToList();
+            var products = await _productService.GetAllProductsAsync(search, pageNumber, pageSize, sortedBy);
 
-            
-            foreach(var item in products)
-            {
-                
-            }
-
-            // .Select(p => new ProductDto
-            // {
-            //     Id = p.Id,
-            //     Name = p.Name,
-            //     Price = p.Price,
-            //     Description = p.Description,
-            //     Images = p.ProductImages.Select(img => new ProductImageDto
-            //     {
-            //         ImageUrl = img.ImageUrl,
-            //         IsMain = img.IsMain
-            //     }).ToList(),
-            //     SubCategoryName = p.SubCategory.Name,
-            //     CategoryName = p.SubCategory.Category.Name
-            // }).ToList();
-
-            return Ok(products);
+            return View(products);
         }
 
         // GET: ProductController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var product = await _productService.GetOneProductAsync(id);
+            return View(product);
         }
 
         // GET: ProductController/Create

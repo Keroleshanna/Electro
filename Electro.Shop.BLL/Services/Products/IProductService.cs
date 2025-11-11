@@ -1,23 +1,13 @@
-﻿using Electro.Shop.BLL.DTOs.Products;
-using Electro.Shop.BLL.Services.Common;
-using Electro.Shop.DAL.Entities.Products;
-using System.Linq.Expressions;
+﻿using Electro.Shop.BLL.DTOs.Coomon;
+using Electro.Shop.BLL.DTOs.Products;
 
 
 namespace Electro.Shop.BLL.Services.Products
 {
-    public interface IProductService : IService<Product>
+    public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAllAsync(
-            Expression<Func<Product, bool>>? expression = null,
-            Expression<Func<Product, object>>[]? includes = null,
-            bool tracked = true,
-            CancellationToken cancellationToken = default);
+        Task<PagedResultDto<ProductReadDto>> GetAllProductsAsync(string search = "default", int pageNumber = 1, int pageSize = 9, string sortedBy = "default", CancellationToken cancellationToken = default);
 
-        Task<Product?> GetOneAsync(
-            Expression<Func<Product, bool>>? expression = null,
-            Expression<Func<Product, object>>[]? includes = null,
-            bool tracked = true,
-            CancellationToken cancellationToken = default);
+        Task<ProductDetailsDto> GetOneProductAsync(int id, CancellationToken cancellationToken = default);
     }
 }

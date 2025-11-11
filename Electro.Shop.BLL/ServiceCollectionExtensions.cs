@@ -7,7 +7,7 @@ namespace Electro.Shop.BLL
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddBusinessLogic(this IServiceCollection services)
+        public static IServiceCollection AddBusinessLogicL(this IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

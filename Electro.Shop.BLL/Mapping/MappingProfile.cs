@@ -8,11 +8,18 @@ namespace Electro.Shop.BLL.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Product, ProductDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<Product, ProductReadDto>()
+                .ForMember(PR => PR.MainImage, p => p.MapFrom(src =>
+                    src.ProductImages
+                        .Where(i => i.IsMain)
+                        .Select(i => i.ImageUrl)
+                        .FirstOrDefault()
+                ));
 
-            //CreateMap<ProductCreateDto, Product>();
-            //CreateMap<ProductUpdateDto, Product>();
+
+            CreateMap<Product, ProductDetailsDto>()
+                .ForMember(p => p.Images, p => p.MapFrom(src =>
+                src.ProductImages.Select(img => img.ImageUrl).ToList()));
         }
     }
 }

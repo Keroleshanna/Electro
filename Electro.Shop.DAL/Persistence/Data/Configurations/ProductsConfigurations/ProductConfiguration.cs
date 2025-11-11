@@ -9,8 +9,8 @@ namespace Electro.Shop.DAL.Persistence.Data.Configurations.ProductsConfiguration
             base.Configure(builder);
 
             builder.Property(p => p.Name)
-                  .HasMaxLength(200)
-                  .IsRequired();
+                  .IsRequired()
+                  .HasMaxLength(400);
 
             builder.Property(p => p.Description)
                    .HasMaxLength(1000);
@@ -19,14 +19,24 @@ namespace Electro.Shop.DAL.Persistence.Data.Configurations.ProductsConfiguration
                    .HasColumnType("decimal(9,2)")
                    .IsRequired();
 
-            builder.Property(p => p.Stock)
-                   .HasDefaultValue(0)
-                   .IsRequired();
+            builder.Property(p => p.Size)
+                   .IsRequired()
+                   .HasMaxLength(50);
 
-            // العلاقة مع Category
-            builder.HasOne(p => p.SubCategory)
+            builder.Property(p => p.Stock)
+                   .HasDefaultValue(0);
+
+
+            // Brand
+            builder.HasOne(p => p.Brand)
+                .WithMany(b => b.Products)
+                .HasForeignKey(p => p.BrandId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Category
+            builder.HasOne(p => p.Collection)
                    .WithMany(c => c.Products)
-                   .HasForeignKey(p => p.SubCategoryId)
+                   .HasForeignKey(p => p.CollectionId)
                    .OnDelete(DeleteBehavior.Restrict);// ✅ ماينفعش نحذف الكاتيجوري وتختفي المنتجات
 
             // العلاقة مع Review (لو عندك كلاس Review)
@@ -41,7 +51,7 @@ namespace Electro.Shop.DAL.Persistence.Data.Configurations.ProductsConfiguration
                    .HasForeignKey(oi => oi.ProductId)
                    .OnDelete(DeleteBehavior.Restrict);// ✅ ماينفعش نحذف المنتج لو ليه طلبات في النظام
 
-            builder.HasIndex(p => new { p.Name, p.SubCategoryId }).IsUnique();
+            builder.HasIndex(p => new { p.Name, p.CollectionId }).IsUnique();
 
         }
     }

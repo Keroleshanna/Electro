@@ -143,6 +143,68 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int?>("DeletedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int?>("LastModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("LogoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("LastModifiedById");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Brands");
+                });
+
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +263,66 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Collection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int?>("DeletedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int?>("LastModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("LastModifiedById");
+
+                    b.HasIndex("SubCategoryId");
+
+                    b.ToTable("Collections");
+                });
+
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -209,8 +331,11 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CreatedById")
                         .HasColumnType("int");
@@ -245,24 +370,27 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(9,2)");
 
                     b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Stock")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("SubCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CollectionId");
 
                     b.HasIndex("CreatedById");
 
@@ -270,9 +398,7 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
 
                     b.HasIndex("LastModifiedById");
 
-                    b.HasIndex("SubCategoryId");
-
-                    b.HasIndex("Name", "SubCategoryId")
+                    b.HasIndex("Name", "CollectionId")
                         .IsUnique();
 
                     b.ToTable("Products");
@@ -721,6 +847,31 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Brand", b =>
+                {
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "LastModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("DeletedByUser");
+
+                    b.Navigation("LastModifiedByUser");
+                });
+
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Category", b =>
                 {
                     b.HasOne("Electro.Shop.DAL.Entities.Users.User", "CreatedByUser")
@@ -746,7 +897,7 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.Navigation("LastModifiedByUser");
                 });
 
-            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Product", b =>
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Collection", b =>
                 {
                     b.HasOne("Electro.Shop.DAL.Entities.Users.User", "CreatedByUser")
                         .WithMany()
@@ -765,9 +916,9 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Electro.Shop.DAL.Entities.Products.SubCategory", "SubCategory")
-                        .WithMany("Products")
+                        .WithMany("Collections")
                         .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
@@ -777,6 +928,47 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.Navigation("LastModifiedByUser");
 
                     b.Navigation("SubCategory");
+                });
+
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Product", b =>
+                {
+                    b.HasOne("Electro.Shop.DAL.Entities.Products.Brand", "Brand")
+                        .WithMany("Products")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Products.Collection", "Collection")
+                        .WithMany("Products")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "DeletedByUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Electro.Shop.DAL.Entities.Users.User", "LastModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("DeletedByUser");
+
+                    b.Navigation("LastModifiedByUser");
                 });
 
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.ProductImage", b =>
@@ -979,9 +1171,19 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
                     b.Navigation("OrderItems");
                 });
 
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Brand", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Category", b =>
                 {
                     b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Collection", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.Product", b =>
@@ -995,7 +1197,7 @@ namespace Electro.Shop.DAL.Persistence.Data.Migrations
 
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Products.SubCategory", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Collections");
                 });
 
             modelBuilder.Entity("Electro.Shop.DAL.Entities.Users.Permission", b =>

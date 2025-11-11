@@ -8,6 +8,6 @@
         // Navigation
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Collection> Collections { get; set; } = new List<Collection>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Electro.Shop.BLL;
+using Electro.Shop.BLL.Mapping;
 using Electro.Shop.DAL;
 using Electro.Shop.DAL.Persistence.Data.Context;
 using Electro.Shop.DAL.Persistence.Data.Seeding;
@@ -17,10 +18,8 @@ namespace Electro.Shop.PL
 
             #region Added by me
 
-            builder.Services.AddPersistence(builder.Configuration);
-
-            builder.Services.AddBusinessLogic();
-            
+            builder.Services.AddDataAccessL(builder.Configuration);
+            builder.Services.AddBusinessLogicL();
             
             #endregion
 

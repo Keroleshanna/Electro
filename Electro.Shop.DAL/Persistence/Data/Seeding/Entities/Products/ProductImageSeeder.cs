@@ -13,66 +13,79 @@ namespace Electro.Shop.DAL.Persistence.Data.Seeding.Entities.Products
             if (await context.ProductImages.AnyAsync(cancellationToken))
                 return;
 
-            ProductImage[] productImage = [
-            // Product 1
-            new(){ProductId = 1, ImageUrl = "img1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 1, ImageUrl = "img5.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 1, ImageUrl = "img9.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 1, ImageUrl = "img11.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 1, ImageUrl = "img3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 1, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-                
-            // Product 2
-            new(){ProductId = 6, ImageUrl = "img2.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 6, ImageUrl = "img4.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 6, ImageUrl = "img8.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 6, ImageUrl = "img10.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 6, ImageUrl = "img5.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 6, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
+            ProductImage[] productImages =
+            {
+                // Collection 1 - Gaming Laptops
+                new ProductImage() { ProductId = 40, ImageUrl = "Alienware_m15_R7_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 40, ImageUrl = "Alienware_m15_R7_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 40, ImageUrl = "Alienware_m15_R7_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 41, ImageUrl = "Asus_ROG_Strix_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 41, ImageUrl = "Asus_ROG_Strix_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 41, ImageUrl = "Asus_ROG_Strix_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 42, ImageUrl = "MSI_GE76_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 42, ImageUrl = "MSI_GE76_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 42, ImageUrl = "MSI_GE76_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 43, ImageUrl = "Razer_Blade_15_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 43, ImageUrl = "Razer_Blade_15_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 43, ImageUrl = "Razer_Blade_15_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                // Collection 2 - Smartphones
+                new ProductImage() { ProductId = 44, ImageUrl = "iPhone_15_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 44, ImageUrl = "iPhone_15_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 44, ImageUrl = "iPhone_15_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 45, ImageUrl = "Samsung_Galaxy_S24_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 45, ImageUrl = "Samsung_Galaxy_S24_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 45, ImageUrl = "Samsung_Galaxy_S24_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 46, ImageUrl = "Google_Pixel_8_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 46, ImageUrl = "Google_Pixel_8_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 46, ImageUrl = "Google_Pixel_8_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 47, ImageUrl = "OnePlus_12_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 47, ImageUrl = "OnePlus_12_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 47, ImageUrl = "OnePlus_12_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                // Collection 3 - Headphones
+                new ProductImage() { ProductId = 48, ImageUrl = "Sony_WH_1000XM5_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 48, ImageUrl = "Sony_WH_1000XM5_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 48, ImageUrl = "Sony_WH_1000XM5_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 49, ImageUrl = "Bose_QuietComfort_45_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 49, ImageUrl = "Bose_QuietComfort_45_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 49, ImageUrl = "Bose_QuietComfort_45_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 50, ImageUrl = "Apple_AirPods_Max_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 50, ImageUrl = "Apple_AirPods_Max_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 50, ImageUrl = "Apple_AirPods_Max_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 51, ImageUrl = "JBL_Live_Pro_2_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 51, ImageUrl = "JBL_Live_Pro_2_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 51, ImageUrl = "JBL_Live_Pro_2_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                // Collection 4 - Smartwatches
+                new ProductImage() { ProductId = 52, ImageUrl = "Apple_Watch_Series_9_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 52, ImageUrl = "Apple_Watch_Series_9_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 52, ImageUrl = "Apple_Watch_Series_9_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 53, ImageUrl = "Samsung_Galaxy_Watch_6_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 53, ImageUrl = "Samsung_Galaxy_Watch_6_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 53, ImageUrl = "Samsung_Galaxy_Watch_6_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 54, ImageUrl = "Garmin_Fenix_7_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 54, ImageUrl = "Garmin_Fenix_7_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 54, ImageUrl = "Garmin_Fenix_7_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            
+                new ProductImage() { ProductId = 55, ImageUrl = "Fitbit_Sense_2_1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 55, ImageUrl = "Fitbit_Sense_2_2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+                new ProductImage() { ProductId = 55, ImageUrl = "Fitbit_Sense_2_3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.UtcNow },
+            };
 
-            // Product 3
-            new(){ProductId = 11, ImageUrl = "img3.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 11, ImageUrl = "img4.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 11, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 11, ImageUrl = "img9.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 11, ImageUrl = "img2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 11, ImageUrl = "img6.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
 
-            // Product 4
-            new(){ProductId = 16, ImageUrl = "img16.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 16, ImageUrl = "img15.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 16, ImageUrl = "img14.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 16, ImageUrl = "img13.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 16, ImageUrl = "img12.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 16, ImageUrl = "img11.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-
-            // Product 5
-            new(){ProductId = 21, ImageUrl = "img1.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 21, ImageUrl = "img5.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 21, ImageUrl = "img9.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 21, ImageUrl = "img11.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 21, ImageUrl = "img3.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 21, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-
-            // Product 2
-            new(){ProductId = 26, ImageUrl = "img2.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 26, ImageUrl = "img4.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 26, ImageUrl = "img8.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 26, ImageUrl = "img10.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 26, ImageUrl = "img5.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 26, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-
-            // Product 3
-            new(){ProductId = 31, ImageUrl = "img3.jpg", IsMain = true, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 31, ImageUrl = "img4.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 31, ImageUrl = "img7.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 31, ImageUrl = "img9.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 31, ImageUrl = "img2.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-            new(){ProductId = 31, ImageUrl = "img6.jpg", IsMain = false, CreatedById = 1, CreatedOn = DateTime.Now},
-
-            ];
-
-            foreach (var item in productImage)
+            foreach (var item in productImages)
                 await context.ProductImages.AddAsync(item, cancellationToken);
 
             await context.SaveChangesAsync(cancellationToken);

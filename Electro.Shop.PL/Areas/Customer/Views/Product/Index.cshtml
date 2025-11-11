@@ -1,6 +1,16 @@
-﻿@model IEnumerable<ProductDto>
+﻿@model PagedResultDto<ProductReadDto>
 @{
-	Layout = "_ShopProductListCustomer";
+	Layout = "_ShopProductListCustomerLayout";
+	ViewData["Title"] = "Products Cards";
+
+	//For Pagination
+	int startPage = Math.Max(1, Model.CurrentPage - 2);
+	int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+}
+
+
+@section Styles {
+	<link href="~/css/site.css" rel="stylesheet" />
 }
 
 
@@ -12,28 +22,34 @@
 		</div>
 		<div class="col-md-10 col-sm-10">
 			<div class="pull-right">
-				<label class="control-label">Show:</label>
-				<select class="form-control input-sm">
-					<option value="#?limit=24" selected="selected">24</option>
-					<option value="#?limit=25">25</option>
-					<option value="#?limit=50">50</option>
-					<option value="#?limit=75">75</option>
-					<option value="#?limit=100">100</option>
-				</select>
+				<form method="get" asp-action="Index" id="pageSizeForm">
+					<label class="control-label">Show:</label>
+					<select name="limit" class="form-control input-sm" onchange="document.getElementById('pageSizeForm').submit()">
+						<option>Number of Cards</option>
+						<option value="6">6</option>
+						<option value="12">12</option>
+						<option value="18">18</option>
+						<option value="24">24</option>
+						<option value="30">30</option>
+					</select>
+				</form>
+
 			</div>
 			<div class="pull-right">
-				<label class="control-label">Sort&nbsp;By:</label>
-				<select class="form-control input-sm">
-					<option value="#?sort=p.sort_order&amp;order=ASC" selected="selected">Default</option>
-					<option value="#?sort=pd.name&amp;order=ASC">Name (A - Z)</option>
-					<option value="#?sort=pd.name&amp;order=DESC">Name (Z - A)</option>
-					<option value="#?sort=p.price&amp;order=ASC">Price (Low &gt; High)</option>
-					<option value="#?sort=p.price&amp;order=DESC">Price (High &gt; Low)</option>
-					<option value="#?sort=rating&amp;order=DESC">Rating (Highest)</option>
-					<option value="#?sort=rating&amp;order=ASC">Rating (Lowest)</option>
-					<option value="#?sort=p.model&amp;order=ASC">Model (A - Z)</option>
-					<option value="#?sort=p.model&amp;order=DESC">Model (Z - A)</option>
-				</select>
+				<form method="get" asp-action="Index" id="PageSortedBy">
+					<label class="control-label">Sort&nbsp;By:</label>
+					<select name="sortedBy" class="form-control input-sm" onchange="document.getElementById('PageSortedBy').submit()">
+						<option value="#?sort=p.sort_order&amp;order=ASC" selected="selected">Default</option>
+						<option value="NameASC">Name (A - Z)</option>
+						<option value="NameDES">Name (Z - A)</option>
+						<option value="PriceASC">Price (Low &gt; High)</option>
+						<option value="PriceDES">Price (High &gt; Low)</option>
+						<option value="#?sort=rating&amp;order=DESC">Rating (Highest)</option>
+						<option value="#?sort=rating&amp;order=ASC">Rating (Lowest)</option>
+						<option value="#?sort=p.model&amp;order=ASC">Model (A - Z)</option>
+						<option value="#?sort=p.model&amp;order=DESC">Model (Z - A)</option>
+					</select>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -41,178 +57,96 @@
 	<!-- BEGIN PRODUCT LIST -->
 	<div class="row product-list">
 		<!-- PRODUCT ITEM START -->
-		@foreach (var item in Model)
+		@foreach (var item in Model.Products)
 		{
-			var mainImage = item.Images.FirstOrDefault(img => img.IsMain);
 			<div class="col-md-4 col-sm-6 col-xs-12">
 				<div class="product-item">
 					<div class="pi-img-wrapper">
-						@if (mainImage is not null)
+						@if (item.MainImage != null)
 						{
-							<img src="~/Images/Products/@mainImage.ImageUrl" class="img-responsive" alt="Berry Lace Dress">
+							<img src="~/Images/Products/@item.MainImage" class="img-responsive" alt="Berry Lace Dress">
+							<div>
+								<a href="~/Images/Products/@item.MainImage" class="btn btn-default fancybox-button">Zoom</a>
+								<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-default">View</a>
+							</div>
 						}
-						<div>
-							<a href="~/Images/Products/img5.jpg" class="btn btn-default fancybox-button">Zoom</a>
-							<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-						</div>
+						else
+						{
+							<img src="~/Images/Products/default.jpg" class="img-responsive" alt="Berry Lace Dress">
+							<div>
+								<a href="~/Images/Products/@item.MainImage" class="btn btn-default fancybox-button">Zoom</a>
+								<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-default">View</a>
+							</div>
+						}
 					</div>
-					<h3><a href="shop-item.html">Berry Lace Dress Berry Lace Dress</a></h3>
-					<div class="pi-price">$29.00</div>
+					<h3><a href="#">@item.Name</a></h3>
+					<div class="pi-price">@item.Price.ToString("C")</div>
 					<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
 				</div>
 			</div>
 		}
 		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model2.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model2.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model6.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model6.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress 2</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-	</div>
-	<div class="row product-list">
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model4.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model4.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model5.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model5.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-				<div class="sticker sticker-new"></div>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model3.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model3.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-	</div>
-	<div class="row product-list">
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model7.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model7.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model1.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model1.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="product-item">
-				<div class="pi-img-wrapper">
-					<img src="~/assets/pages/img/products/model2.jpg" class="img-responsive" alt="Berry Lace Dress">
-					<div>
-						<a href="~/assets/pages/img/products/model2.jpg" class="btn btn-default fancybox-button">Zoom</a>
-						<a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-					</div>
-				</div>
-				<h3><a href="shop-item.html">Berry Lace Dress</a></h3>
-				<div class="pi-price">$29.00</div>
-				<a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-				<div class="sticker sticker-sale"></div>
-			</div>
-		</div>
-		<!-- PRODUCT ITEM END -->
 	</div>
 	<!-- END PRODUCT LIST -->
 	<!-- BEGIN PAGINATOR -->
 	<div class="row">
-		<div class="col-md-4 col-sm-4 items-info">Items 1 to 9 of 10 total</div>
+		<div class="col-md-4 col-sm-4 items-info">Page @Model.CurrentPage of @Model.TotalPages total</div>
 		<div class="col-md-8 col-sm-8">
 			<ul class="pagination pull-right">
-				<li><a href="javascript:;">&laquo;</a></li>
-				<li><a href="javascript:;">1</a></li>
-				<li><span>2</span></li>
-				<li><a href="javascript:;">3</a></li>
-				<li><a href="javascript:;">4</a></li>
-				<li><a href="javascript:;">5</a></li>
-				<li><a href="javascript:;">&raquo;</a></li>
+				@if (Model.CurrentPage > 1)
+				{
+					<li><a asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">&laquo;</a></li>
+				}
+				else
+				{
+					<li><a hidden asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">&laquo;</a></li>
+
+				}
+				@* First Page + ... *@
+				@if (startPage > 1)
+				{
+					<li><a asp-action="Index" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">1</a></li>
+					@if (startPage > 2)
+					{
+						<li><span>...</span></li>
+					}
+				}
+
+				@* Main Pages *@
+				@for (int i = startPage; i <= endPage; i++)
+				{
+					if (i == Model.CurrentPage)
+					{
+						<li class="active"><span>@i</span></li>
+					}
+					else
+					{
+						<li><a asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">@i</a></li>
+					}
+				}
+
+				@* ... + Last Page *@
+				@if (endPage < Model.TotalPages)
+				{
+					@if (endPage < Model.TotalPages - 1)
+					{
+						<li><span>...</span></li>
+					}
+					<li><a asp-action="Index" asp-route-pageNumber="@Model.TotalPages" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">@Model.TotalPages</a></li>
+				}
+				@if (Model.CurrentPage < Model.TotalPages)
+				{
+					<li><a asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">&raquo;</a></li>
+				}
+				else
+				{
+					<li><a hidden asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize" asp-route-sortedBy="@Model.SortedBy">&raquo;</a></li>
+
+				}
 			</ul>
 		</div>
 	</div>
 	<!-- END PAGINATOR -->
+
 </div>
+

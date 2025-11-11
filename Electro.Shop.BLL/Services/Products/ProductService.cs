@@ -1,83 +1,146 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Electro.Shop.BLL.DTOs.Coomon;
 using Electro.Shop.BLL.DTOs.Products;
 using Electro.Shop.DAL.Entities.Products;
 using Electro.Shop.DAL.Persistence.UOW;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Electro.Shop.BLL.Services.Products
 {
     public class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductService
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IUnitOfWork _uow = unitOfWork;
         private readonly IMapper _mapper = mapper;
-        private bool _disposed = false;
 
 
-        public async ValueTask DisposeAsync()
+        //public async Task<int> CreateAsync(Product entity, CancellationToken cancellationToken = default)
+        //{
+        //    var repo = _uow.Repository<Product>();
+        //    if (entity is null)
+        //        throw new ArgumentNullException(nameof(entity));
+
+        //    if (string.IsNullOrEmpty(entity.Name))
+        //        throw new ValidationException("Product name is required");
+
+        //    await repo.CreateAsync(entity, cancellationToken);
+        //    return await _uow.CommitAsync(cancellationToken);
+        //}
+
+        //public async Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
+        //{
+        //    var repo = _uow.Repository<Product>();
+        //    if (entity is null)
+        //        throw new ArgumentNullException(nameof(entity));
+
+        //    if (string.IsNullOrEmpty(entity.Name))
+        //        throw new ValidationException("Product name is required");
+
+        //    repo.Update(entity);
+        //    await _uow.CommitAsync(cancellationToken);
+        //}
+
+        //public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        //{
+        //    var repo = _uow.Repository<Product>();
+        //    var entity = await repo.GetSingleAsync(p => p.Id == id, tracked: false, cancellationToken: cancellationToken);
+        //    if (entity is null)
+        //        throw new KeyNotFoundException($"Product with id {id} not found");
+
+        //    repo.Delete(entity);
+        //    await _uow.CommitAsync(cancellationToken);
+        //}
+
+        //public async Task<IEnumerable<ProductReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        //{
+        //    var repo = _uow.Repository<Product>();
+        //    var products = repo.GetQueryable(tracked: false);
+
+        //    var list = await products.ProjectTo<ProductReadDto>(_mapper.ConfigurationProvider)
+        //        .ToListAsync(cancellationToken);
+
+        //    return list;
+        //}
+
+        //public async Task<ProductReadDto?> GetOneAsync(int id, CancellationToken cancellationToken = default)
+        //{
+        //    var repo = _uow.Repository<Product>();
+        //    // Use includes to ensure SubCategory and Category are available for mapping
+        //    var query = repo.GetQueryable(p => p.Id == id, tracked: false);
+
+        //    // Use ProjectTo for efficient projection
+        //    var dto = await query.ProjectTo<ProductReadDto>(_mapper.ConfigurationProvider)
+        //                                     .FirstOrDefaultAsync(cancellationToken);
+
+        //    if (dto == null)
+        //        throw new KeyNotFoundException($"Product with id {id} not found");
+
+        //    return dto;
+        //}
+
+        public async Task<PagedResultDto<ProductReadDto>> GetAllProductsAsync(string search = "default", int pageNumber = 1, int pageSize = 9, string sortedBy = "default", CancellationToken cancellationToken = default)
         {
-            if (!_disposed)
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 9;
+
+            var repo = _uow.Repository<Product>();
+
+            // Base query with includes for mapping
+            var query = repo.GetQueryable(expression: null, tracked: false, p => p.ProductImages);
+
+            // Search - use EF.Functions.Like for DB-side case-insensitive (depending on collation)
+            if (!string.IsNullOrWhiteSpace(search) && search != "default")
             {
-                await _unitOfWork.DisposeAsync();
-                _disposed = true;
+                search = search.Trim();
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{search}%"));
             }
+
+            // Sorting
+            query = sortedBy switch
+            {
+                "NameASC" => query.OrderBy(p => p.Name),
+                "NameDES" => query.OrderByDescending(p => p.Name),
+                "PriceASC" => query.OrderBy(p => p.Price),
+                "PriceDES" => query.OrderByDescending(p => p.Price),
+                _ => query.OrderByDescending(p => p.CreatedOn)
+            };
+
+            // Count after filters (async)
+            var totalCount = await query.CountAsync(cancellationToken);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // 👇 هنا بنستخدم ProjectTo بدلاً من Select
+            var products = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<ProductReadDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PagedResultDto<ProductReadDto>
+            {
+                Products = products,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                SortedBy = sortedBy,
+                Search = search
+            };
         }
-        
-        public async Task<Product?> GetOneAsync(int id, CancellationToken cancellationToken = default)
+
+        public async Task<ProductDetailsDto> GetOneProductAsync(int id, CancellationToken cancellationToken = default)
         {
-            var product = await _unitOfWork.Repository<Product>()
-                .GetOneAsync(P => P.Id == id, cancellationToken: cancellationToken);
+            if (id <= 0)
+                throw new KeyNotFoundException($"Sorry Product with ID => {id} NOT FOUND!!");
+            var repo = _uow.Repository<Product>();
+            var quary = await repo.GetSingleAsync(p => p.Id == id, false, cancellationToken, p => p.ProductImages);
 
-            return product ?? throw new KeyNotFoundException($"Product with {id} not found");
-        }
-        public async Task<Product?> GetOneAsync(Expression<Func<Product, bool>>? expression = null, Expression<Func<Product, object>>[]? includes = null, bool tracked = true, CancellationToken cancellationToken = default)
-        {
-            var product = (await GetAllAsync(expression, includes, tracked, cancellationToken)).FirstOrDefault();
+            if (quary is null)
+                throw new NullReferenceException();
 
-            return product is not null ? product : throw new KeyNotFoundException($"I Can't found It");
-        }
-        
-        public async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            var products = await _unitOfWork.Repository<Product>().GetAllAsync(cancellationToken: cancellationToken);
+            var product = _mapper.Map<ProductDetailsDto>(quary);
+            return product;
 
-            return products is not null ? products : throw new NullReferenceException("Sorry, There are no Products");
-
-        }
-        public async Task<IEnumerable<Product>> GetAllAsync(Expression<Func<Product, bool>>? expression = null, Expression<Func<Product, object>>[]? includes = null, bool tracked = true, CancellationToken cancellationToken = default)
-        {
-            var products = await _unitOfWork.Repository<Product>().GetAllAsync(expression, includes, tracked, cancellationToken);
-
-            return _mapper.Map<IEnumerable<Product>>(products);
-        }
-
-
-        public async Task<int> CreateAsync(Product entity, CancellationToken cancellationToken = default)
-        {
-            if (entity is null)
-                throw new ArgumentNullException(nameof(entity));
-
-            // التحقق من البيانات
-            if (string.IsNullOrWhiteSpace(entity.Name))
-                throw new ValidationException("Product name is required");
-
-            await _unitOfWork.Repository<Product>().CreateAsync(entity, cancellationToken);
-            return await _unitOfWork.CommitAsync(cancellationToken);
-        }
-        public async Task UpdateAsync(Product entity, CancellationToken cancellationToken = default)
-        {
-            if (entity is null)
-                throw new KeyNotFoundException($"Product is null");
-
-            _unitOfWork.Repository<Product>().Update(entity);
-            await _unitOfWork.CommitAsync(cancellationToken);
-        }
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
-        {
-            var product = await GetOneAsync(id, cancellationToken) ?? throw new KeyNotFoundException($"Product with {id} not found");
-
-            _unitOfWork.Repository<Product>().Delete(product);
-            await _unitOfWork.CommitAsync(cancellationToken);
         }
     }
 }
